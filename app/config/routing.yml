@@ -1,0 +1,5 @@
+shooter_interface:
+    resource: "@ShooterInterfaceBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
