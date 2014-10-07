@@ -16,4 +16,13 @@ class DefaultController extends Controller
     {
         return array();
     }
+    
+    /**
+     * @Route("/order/{id}", name="order")
+     * @Template()
+     */
+    public function orderAction($id)
+    {
+        return array();
+    }
 }
