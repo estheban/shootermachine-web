@@ -1,5 +1,0 @@
-_assetic:
-    resource: .
-    type: assetic
-_app:
-    resource: /home/jtabet/workspace/perso/sf2/interface-machine-shooter/path/app/config/routing_dev.yml
