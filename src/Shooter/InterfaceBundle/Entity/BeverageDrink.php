@@ -29,14 +29,14 @@ class BeverageDrink
     private $qty;
     
     /**
-     * @ManyToOne(targetEntity="Beverage")
-     * @JoinColumn(name="beverage_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Beverage")
+     * @ORM\JoinColumn(name="beverage_id", referencedColumnName="id")
      **/
     private $beverage;
 
     /**
-     * @ManyToOne(targetEntity="Drink")
-     * @JoinColumn(name="drink_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Drink")
+     * @ORM\JoinColumn(name="drink_id", referencedColumnName="id")
      **/
     private $drink;
     
