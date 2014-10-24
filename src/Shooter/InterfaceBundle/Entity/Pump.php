@@ -36,7 +36,7 @@ class Pump
     private $active;
     
     /**
-     * @OneToOne(targetEntity="Beverage")
+     * @ORM\OneToOne(targetEntity="Beverage")
      * @JoinColumn(name="beverage_id", referencedColumnName="id")
      **/
     private $beverage;

@@ -43,7 +43,7 @@ class Beverage
     private $time;
     
     /**
-     * @OneToOne(targetEntity="Pump", mappedBy="beverage")
+     * @ORM\OneToOne(targetEntity="Pump", mappedBy="beverage")
      **/
     private $pump;
 
