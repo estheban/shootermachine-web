@@ -2,7 +2,7 @@
 
 namespace Shooter\InterfaceBundle\Entity;
 
-class arduino
+class Arduino
 {
 	private $arduinoServer =  '';
 
