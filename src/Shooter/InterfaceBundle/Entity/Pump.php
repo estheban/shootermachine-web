@@ -37,7 +37,7 @@ class Pump
     
     /**
      * @ORM\OneToOne(targetEntity="Beverage")
-     * @JoinColumn(name="beverage_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="beverage_id", referencedColumnName="id")
      **/
     private $beverage;
     
