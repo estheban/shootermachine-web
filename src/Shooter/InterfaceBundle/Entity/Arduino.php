@@ -24,9 +24,9 @@ class Arduino
 
 	public function arduinoResquest($arduinoServer, $request)
 	{
-// $curl = curl_init($arduinoServer . $request);
-// echo curl_exec($curl);
-		return file_get_contents($arduinoServer . $request);;
+            $curl = curl_init($arduinoServer . $request);
+            return curl_exec($curl);
+            // return file_get_contents($arduinoServer . $request);;
 	}
 
 	public function initInstruc($pumpID, $mode = 'output')
