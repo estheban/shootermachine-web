@@ -7,9 +7,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Shooter\InterfaceBundle\Entity\Arduino;
+use Shooter\InterfaceBundle\Entity\Drink;
 
 class DefaultController extends Controller
 {
+    private $arduinoServer = 'http://192.168.70.105/'; // 'http://arduino.local/'; latency on domaine name resolution
+    
     /**
      * @Route("/")
      * @Template()
@@ -25,6 +28,8 @@ class DefaultController extends Controller
      */
     public function orderAction($id)
     {
+        $arduino = $this->initArduino();
+        $this->drinkToArduino($arduino);
         return array();
     }
     
@@ -46,8 +51,7 @@ class DefaultController extends Controller
     
     private function initArduino()
     {
-        $arduinoServer =  'http://192.168.70.105/'; // 'http://arduino.local/'; latency on domaine name resolution
-        $arduino = new Arduino($arduinoServer);
+        $arduino = new Arduino($this->arduinoServer);
         
         return $arduino;
     }
@@ -58,7 +62,7 @@ class DefaultController extends Controller
         
     }
     
-    private function drinkToArduino()
+    private function drinkToArduino(Drink $drink, Arduino $arduino)
     {
 
         
