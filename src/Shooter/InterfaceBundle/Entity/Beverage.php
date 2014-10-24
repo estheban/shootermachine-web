@@ -41,7 +41,11 @@ class Beverage
      * @ORM\Column(name="time", type="decimal")
      */
     private $time;
-
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Pump", mappedBy="beverage")
+     **/
+    private $pump;
 
     /**
      * Get id
@@ -120,5 +124,28 @@ class Beverage
     public function getTime()
     {
         return $this->time;
+    }
+    
+    /**
+     * Set pump
+     *
+     * @param Pump $pump
+     * @return Beverage
+     */
+    public function setPump($pump)
+    {
+        $this->pump = $pump;
+
+        return $this;
+    }
+
+    /**
+     * Get pump
+     *
+     * @return Pump 
+     */
+    public function getPump()
+    {
+        return $this->pump;
     }
 }

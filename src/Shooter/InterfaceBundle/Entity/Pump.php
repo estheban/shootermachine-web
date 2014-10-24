@@ -34,8 +34,13 @@ class Pump
      * @ORM\Column(name="active", type="boolean")
      */
     private $active;
-
-
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Beverage")
+     * @ORM\JoinColumn(name="beverage_id", referencedColumnName="id")
+     **/
+    private $beverage;
+    
     /**
      * Get id
      *
@@ -90,5 +95,28 @@ class Pump
     public function getActive()
     {
         return $this->active;
+    }
+    
+    /**
+     * Set beverage
+     *
+     * @param Beverage $beverage
+     * @return Pump
+     */
+    public function setBeverage($beverage)
+    {
+        $this->beverage = $beverage;
+
+        return $this;
+    }
+
+    /**
+     * Get beverage
+     *
+     * @return Beverage 
+     */
+    public function getBeverage()
+    {
+        return $this->beverage;
     }
 }
