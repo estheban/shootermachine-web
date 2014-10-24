@@ -19,7 +19,9 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return array('pageTitle' => 'Super');
+        $drinks = array();
+        
+        return array('pageTitle' => 'Super', 'drinks' => $drinks);
     }
     
     /**
