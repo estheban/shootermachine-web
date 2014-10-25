@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Shooter\InterfaceBundle\Entity\Arduino;
 use Shooter\InterfaceBundle\Entity\Drink;
+use Shooter\InterfaceBundle\Entity\BeverageDrinkRepository;
 
 class DefaultController extends Controller
 {
@@ -86,26 +87,37 @@ class DefaultController extends Controller
         return $this->getDoctrine()->getRepository('ShooterInterfaceBundle:Drink')->findAll();
     }
     
+    private function portionToTime($portion)
+    {
+//        1sec = 25ml
+//        2sec = 3/4oz
+//        5sec = 2oz
+                
+        return $portion * 2.5;
+    }
+    
     private function drinkToArduino(Drink $drink, Arduino $arduino)
     {
+//        $BeverageDrinks = $drink->BeverageDrinks();
+//        var_dump($BeverageDrinks);
+//        die('relation : '.$drink->getId());
         
-// Logic
-// Arduino -> Pump -> Breuvage 
-// fn getTime
-// 
-        //Conversion portion to time
+        $BeverageDrinks = $this->getDoctrine()
+                        ->getRepository('ShooterInterfaceBundle:BeverageDrink')
+                        ->findByDrink($drink->getId());
         
         $portions = array();
-        $portions[] = new Portion(2,1.000);
-        $portions[] = new Portion(3,1.000);
-        $portions[] = new Portion(4,1.000);
-        $portions[] = new Portion(5,1.000);
-        $portions[] = new Portion(6,1.000);
-        $portions[] = new Portion(7,1.000);
-        $portions[] = new Portion(8,1.000);
-        $portions[] = new Portion(9,1.000);
-        $portions[] = new Portion(10,1.000);
-        $portions[] = new Portion(11,1.000);
+        foreach ($BeverageDrinks as $BeverageDrink) {
+            if($BeverageDrink->getBeverage()->getPump() != NULL) {
+                    $portions[] = new Portion(
+                    $BeverageDrink->getBeverage()->getPump()->getPin(),
+                    $this->portionToTime($BeverageDrink->getQty())
+                    );
+            }
+        }
+        
+//        var_dump($portions);
+//        die('Show');
 
         $childs = array();
         foreach ($portions as $key => $portion) {

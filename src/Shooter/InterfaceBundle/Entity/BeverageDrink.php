@@ -29,13 +29,13 @@ class BeverageDrink
     private $qty;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Beverage")
+     * @ORM\ManyToOne(targetEntity="Beverage", inversedBy="BeverageDrinks")
      * @ORM\JoinColumn(name="beverage_id", referencedColumnName="id")
      **/
     private $beverage;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Drink")
+     * @ORM\ManyToOne(targetEntity="Drink", inversedBy="BeverageDrinks")
      * @ORM\JoinColumn(name="drink_id", referencedColumnName="id")
      **/
     private $drink;
