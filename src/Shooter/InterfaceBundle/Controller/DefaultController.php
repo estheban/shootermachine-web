@@ -129,16 +129,16 @@ class DefaultController extends Controller
         //Conversion portion to time
         
         $portions = array();
-        $portions[] = new Portion(2,0.000);
-        $portions[] = new Portion(3,0.000);
-        $portions[] = new Portion(4,0.000);
-        $portions[] = new Portion(5,0.000);
-        $portions[] = new Portion(6,0.000);
-        $portions[] = new Portion(7,0.000);
-        $portions[] = new Portion(8,0.000);
-        $portions[] = new Portion(9,0.000);
-        $portions[] = new Portion(10,0.000);
-        $portions[] = new Portion(11,0.000);
+        $portions[] = new Portion(2,1.000);
+        $portions[] = new Portion(3,1.000);
+        $portions[] = new Portion(4,1.000);
+        $portions[] = new Portion(5,1.000);
+        $portions[] = new Portion(6,1.000);
+        $portions[] = new Portion(7,1.000);
+        $portions[] = new Portion(8,1.000);
+        $portions[] = new Portion(9,1.000);
+        $portions[] = new Portion(10,1.000);
+        $portions[] = new Portion(11,1.000);
 
         foreach ($portions as $key => $portion) {
             $childs[] = $arduino->arduinoResquest(
@@ -148,7 +148,6 @@ class DefaultController extends Controller
             //echo 'Pump Start :'.$portion->pump_id.'<br />';
             $i = true;
             while($i) {
-                usleep(100000);
                 if ($portion->needToStop()) {
                 $childs[] = $arduino->arduinoResquest(
                         $arduino->getArduinoServer(), 
@@ -157,6 +156,7 @@ class DefaultController extends Controller
                 unset($portions[$key]);
                 $i = false;
                 }
+                usleep(100000);
             }
         }
         
