@@ -19,9 +19,9 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        $drinks = array();
-        
-        return array('pageTitle' => 'Super', 'drinks' => $drinks);
+        $drinks = $this->getDrinks();
+                
+        return array('pageTitle' => 'Let\'s drink !', 'drinks' => $drinks);
     }
     
     /**
@@ -35,6 +35,8 @@ class DefaultController extends Controller
         $drink = new Drink;
         
         $this->drinkToArduino($drink, $arduino);
+        
+        $this->indexAction();
         
         die('test order');
         return array();
@@ -113,7 +115,7 @@ class DefaultController extends Controller
     
     private function getDrinks()
     {
-        
+        return array();
     }
     
     private function drinkToArduino(Drink $drink, Arduino $arduino)
@@ -143,7 +145,7 @@ class DefaultController extends Controller
                     $arduino->getArduinoServer(), 
                     $arduino->pumpActivate($portion->pump_id));
             $portion->start();
-            echo 'Pump Start :'.$portion->pump_id.'<br />';
+            //echo 'Pump Start :'.$portion->pump_id.'<br />';
             $i = true;
             while($i) {
                 usleep(100000);
@@ -151,7 +153,7 @@ class DefaultController extends Controller
                 $childs[] = $arduino->arduinoResquest(
                         $arduino->getArduinoServer(), 
                         $arduino->pumpDeactivate($portion->pump_id));
-                echo 'Pump End :'.$portion->pump_id.'<br />';
+                //echo 'Pump End :'.$portion->pump_id.'<br />';
                 unset($portions[$key]);
                 $i = false;
                 }

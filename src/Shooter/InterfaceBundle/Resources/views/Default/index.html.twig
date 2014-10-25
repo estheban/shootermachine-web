@@ -7,29 +7,18 @@
 {% endblock headerTitle %}
 
 {% block content %}
-    <!-- Projects Row -->
+    
+    <!--  Row for 6 buttons-->
     <div class="row">
+    {% for drink in drinks %}
         <div class="col-md-2 portfolio-item text-center">
-            <a class="btn btn-primary btn-lg" role="button">Learn more</a>
+            <a href="http://localhost:8000/order/{{ drink.id }}" class="btn btn-primary btn-lg" role="button">Order #{{ drink.id }}</a>
         </div>
-        <div class="col-md-2 portfolio-item text-center">
-            <a class="btn btn-primary btn-lg" role="button">Learn more</a>
-        </div>
-        <div class="col-md-2 portfolio-item text-center">
-            <a class="btn btn-primary btn-lg" role="button">Learn more</a>
-        </div>
-        <div class="col-md-2 portfolio-item text-center">
-            <a class="btn btn-primary btn-lg" role="button">Learn more</a>
-        </div>
-        <div class="col-md-2 portfolio-item text-center">
-            <a class="btn btn-primary btn-lg" role="button">Learn more</a>
-        </div>
-        <div class="col-md-2 portfolio-item text-center">
-            <a class="btn btn-primary btn-lg" role="button">Learn more</a>
-        </div>
+    {% endfor %}
     </div>
     <!-- /.row -->
 
+    
 {#    <hr>
 
     {% block pagination %}
