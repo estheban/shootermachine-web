@@ -30,7 +30,6 @@ class DefaultController extends Controller
      */
     public function orderAction($id)
     {
-        //die('order');
         $arduino = $this->initArduino();
         $drink = new Drink;
         
@@ -63,48 +62,7 @@ class DefaultController extends Controller
         die('Fn startup');
         return array();
     }
-    
-    /**
-     * @Route("/test")
-     * @Template()
-     */
-    public function testAction()
-    {
-        echo 'Start'.'<br />';
-        if (($pid = pcntl_fork()) == 0) {
-            die('Child die : '.$pid.'<br />');
-            // return file_get_contents($arduinoServer . $request);
-        }
-        
-        echo 'Parent :'.$pid.'<br />';
-        
-        phpinfo();
-        
-        die('test startup'.'<br />');
-        return array();
-    }
-    
-    /**
-     * @Route("/ssh")
-     * @Template()
-     */
-    public function sshAction()
-    {
-        require __DIR__.'../Resources/phpseclib0.3.8/Net/SSH2.php';
 
-        $ssh = new Net_SSH2('$this->arduinoServer');
-        if (!$ssh->login('root', 'arduino')) {
-            exit('Login Failed');
-        }
-        
-        echo $ssh->exec('pwd');
-        echo $ssh->exec('ls -la');
-        
-        die('test ssh'.'<br />');
-        return array();
-    }
-   
-    
     private function initArduino()
     {
         $arduino = new Arduino($this->arduinoServer);
@@ -120,7 +78,6 @@ class DefaultController extends Controller
     
     private function drinkToArduino(Drink $drink, Arduino $arduino)
     {
-        //die('drinkToArduino');
         
 // Logic
 // Arduino -> Pump -> Breuvage 
@@ -140,23 +97,23 @@ class DefaultController extends Controller
         $portions[] = new Portion(10,1.000);
         $portions[] = new Portion(11,1.000);
 
+        $childs = array();
         foreach ($portions as $key => $portion) {
             $childs[] = $arduino->arduinoResquest(
                     $arduino->getArduinoServer(), 
                     $arduino->pumpActivate($portion->pump_id));
             $portion->start();
-            //echo 'Pump Start :'.$portion->pump_id.'<br />';
+            
             $i = true;
             while($i) {
                 if ($portion->needToStop()) {
                 $childs[] = $arduino->arduinoResquest(
                         $arduino->getArduinoServer(), 
                         $arduino->pumpDeactivate($portion->pump_id));
-                //echo 'Pump End :'.$portion->pump_id.'<br />';
                 unset($portions[$key]);
                 $i = false;
                 }
-                usleep(100000);
+                usleep(50000);
             }
         }
         
@@ -166,8 +123,6 @@ class DefaultController extends Controller
     {
         //DO IT
         $childs = array();
-
-        //Sort ???
 
         //Start
         echo 'start';
