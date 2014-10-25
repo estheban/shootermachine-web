@@ -12,7 +12,7 @@
     <div class="row">
     {% for drink in drinks %}
         <div class="col-md-2 portfolio-item text-center">
-            <a href="http://localhost:8000/order/{{ drink.id }}" class="btn btn-primary btn-lg" role="button">Order #{{ drink.id }}</a>
+            <a href="http://localhost:8000/order/{{ drink.getId() }}" class="btn btn-primary btn-lg" role="button">{{ drink.getName() }}</a>
         </div>
     {% endfor %}
     </div>

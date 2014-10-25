@@ -12,15 +12,15 @@ use Shooter\InterfaceBundle\Entity\Drink;
 class DefaultController extends Controller
 {
     private $arduinoServer = 'http://192.168.70.105/'; // 'http://arduino.local/'; latency on domaine name resolution
-    
+
     /**
-     * @Route("/")
+     * @Route("/", name="home")
      * @Template()
      */
     public function indexAction()
     {
         $drinks = $this->getDrinks();
-                
+        
         return array('pageTitle' => 'Let\'s drink !', 'drinks' => $drinks);
     }
     
@@ -31,14 +31,12 @@ class DefaultController extends Controller
     public function orderAction($id)
     {
         $arduino = $this->initArduino();
-        $drink = new Drink;
-        
+        $drink = $this->getDrink($id);
+
         $this->drinkToArduino($drink, $arduino);
         
-        $this->indexAction();
-        
-        die('test order');
-        return array();
+        //Redirect
+        return $this->redirect($this->generateUrl('home'));
     }
     
     /**
@@ -70,10 +68,22 @@ class DefaultController extends Controller
         return $arduino;
     }
 
+    private function getDrink($id)
+    {
+        $drink = $this->getDoctrine()->getRepository('ShooterInterfaceBundle:Drink')->find($id);
+        
+        if (!$drink) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$id
+            );
+        }
+        
+        return $drink;
+    }
     
     private function getDrinks()
     {
-        return array();
+        return $this->getDoctrine()->getRepository('ShooterInterfaceBundle:Drink')->findAll();
     }
     
     private function drinkToArduino(Drink $drink, Arduino $arduino)
