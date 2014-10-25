@@ -24,7 +24,7 @@ class BeverageDrink
     /**
      * @var string
      *
-     * @ORM\Column(name="qty", type="decimal")
+     * @ORM\Column(name="qty", type="decimal", precision=10, scale=4)
      */
     private $qty;
     

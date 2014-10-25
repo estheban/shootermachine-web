@@ -38,7 +38,7 @@ class Beverage
     /**
      * @var string
      *
-     * @ORM\Column(name="time", type="decimal")
+     * @ORM\Column(name="time", type="decimal", precision=10, scale=4)
      */
     private $time;
     
