@@ -35,7 +35,7 @@ assetic:
     filters:
         less:
             node: /usr/local/bin/node
-            node_paths: [/usr/local/lib/node_modules]
+            node_paths: [%kernel.root_dir%/../vendor/node]
             apply_to: "\.less$"
         cssrewrite: ~
         #closure:
@@ -78,3 +78,31 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+braincrafted_bootstrap:
+    auto_configure:
+        twig: false
+    jquery_path: %kernel.root_dir%/../vendor/jquery/jquery/jquery-1.11.1.js
+
+old_sound_rabbit_mq:
+    connections:
+        default:
+            host: 'localhost'
+            port: 5672
+            user: 'guest'
+            password: 'guest'
+            vhost: '/'
+            lazy: false
+    producers:
+        events:
+            connection: default
+            exchange_options: {name: 'events', type: topic}
+    consumers:
+        events:
+            connection: default
+            exchange_options: {name: 'events', type: topic}
+            queue_options:
+                name: 'events'
+                routing_keys: ['#']
+            callback: elcweb.rabbitmq.consumer.default
+            qos_options: {prefetch_size: 0, prefetch_count: 1, global: false}

@@ -19,6 +19,12 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
             new Shooter\InterfaceBundle\ShooterInterfaceBundle(),
+            
+            // Events
+            new JMS\SerializerBundle\JMSSerializerBundle(),
+            new Elcweb\EventStoreBundle\ElcwebEventStoreBundle(),
+            new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
+            new Elcweb\RabbitMqBundle\ElcwebRabbitMqBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -29,11 +29,14 @@ class DefaultController extends Controller
      * @Route("/order/{id}", name="order")
      * @Template()
      */
-    public function orderAction($id)
+    public function orderAction(Drink $drink)
     {
         $arduino = $this->initArduino();
-        $drink = $this->getDrink($id);
 
+        $this
+            ->get('braincrafted_bootstrap.flash')
+            ->success('=)');
+        
         $this->drinkToArduino($drink, $arduino);
         
         //Redirect
@@ -68,23 +71,21 @@ class DefaultController extends Controller
         
         return $arduino;
     }
-
-    private function getDrink($id)
-    {
-        $drink = $this->getDoctrine()->getRepository('ShooterInterfaceBundle:Drink')->find($id);
-        
-        if (!$drink) {
-            throw $this->createNotFoundException(
-                'No product found for id '.$id
-            );
-        }
-        
-        return $drink;
-    }
     
     private function getDrinks()
     {
-        return $this->getDoctrine()->getRepository('ShooterInterfaceBundle:Drink')->findAll();
+//        return $this
+//                ->getDoctrine()
+//                ->getRepository('ShooterInterfaceBundle:Drink')
+//                ->findAll();
+        
+        return $this
+            ->getDoctrine()
+            ->getRepository('ShooterInterfaceBundle:Drink')
+            ->createQueryBuilder('p')
+            ->orderBy('p.name', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
     
     private function portionToTime($portion)
@@ -93,31 +94,22 @@ class DefaultController extends Controller
 //        2sec = 3/4oz
 //        5sec = 2oz
                 
-        return $portion * 2.5;
+        return $portion * 2.3;
     }
     
     private function drinkToArduino(Drink $drink, Arduino $arduino)
     {
-//        $BeverageDrinks = $drink->BeverageDrinks();
-//        var_dump($BeverageDrinks);
-//        die('relation : '.$drink->getId());
-        
-        $BeverageDrinks = $this->getDoctrine()
-                        ->getRepository('ShooterInterfaceBundle:BeverageDrink')
-                        ->findByDrink($drink->getId());
+        $BeverageDrinks = $drink->getBeverageDrinks();
         
         $portions = array();
         foreach ($BeverageDrinks as $BeverageDrink) {
-            if($BeverageDrink->getBeverage()->getPump() != NULL) {
+            if($BeverageDrink->getBeverage()->getPump() != null) {
                     $portions[] = new Portion(
-                    $BeverageDrink->getBeverage()->getPump()->getPin(),
-                    $this->portionToTime($BeverageDrink->getQty())
+                        $BeverageDrink->getBeverage()->getPump()->getPin(),
+                        $this->portionToTime($BeverageDrink->getQty())
                     );
             }
         }
-        
-//        var_dump($portions);
-//        die('Show');
 
         $childs = array();
         foreach ($portions as $key => $portion) {
@@ -129,11 +121,11 @@ class DefaultController extends Controller
             $i = true;
             while($i) {
                 if ($portion->needToStop()) {
-                $childs[] = $arduino->arduinoResquest(
-                        $arduino->getArduinoServer(), 
-                        $arduino->pumpDeactivate($portion->pump_id));
-                unset($portions[$key]);
-                $i = false;
+                    $childs[] = $arduino->arduinoResquest(
+                            $arduino->getArduinoServer(), 
+                            $arduino->pumpDeactivate($portion->pump_id));
+                    unset($portions[$key]);
+                    $i = false;
                 }
                 usleep(50000);
             }

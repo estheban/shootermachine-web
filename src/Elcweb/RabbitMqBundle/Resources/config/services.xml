@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="elcweb.rabbitmq.consumer.default.class">Elcweb\RabbitMqBundle\Consumer\DefaultConsumer</parameter>
+        <parameter key="elcweb.rabbitmq.producer.default.class">Elcweb\RabbitMqBundle\Producer\DefaultProducer</parameter>
+    </parameters>
+
+    <services>
+        <service id="elcweb.rabbitmq.consumer.default" class="%elcweb.rabbitmq.consumer.default.class%">
+            <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="serializer" />
+        </service>
+
+        <service id="elcweb.rabbitmq.producer.default" class="%elcweb.rabbitmq.producer.default.class%">
+            <argument type="service" id="security.context" />
+            <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="serializer" />
+            <argument type="service" id="old_sound_rabbit_mq.events_producer" />
+        </service>
+    </services>
+</container>

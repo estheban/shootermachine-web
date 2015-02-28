@@ -27,7 +27,11 @@ class Drink
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
-
+    
+    /**
+     * @ORM\OneToMany(targetEntity="BeverageDrink", mappedBy="drink")
+     */
+    private $beverageDrinks;
 
     /**
      * Get id
@@ -60,5 +64,10 @@ class Drink
     public function getName()
     {
         return $this->name;
+    }
+    
+    public function getBeverageDrinks()
+    {
+        return $this->beverageDrinks;
     }
 }
