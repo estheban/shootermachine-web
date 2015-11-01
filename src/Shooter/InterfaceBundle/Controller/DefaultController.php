@@ -12,7 +12,7 @@ use Shooter\InterfaceBundle\Entity\BeverageDrinkRepository;
 
 class DefaultController extends Controller
 {
-    private $arduinoServer = 'http://192.168.70.105/'; // 'http://arduino.local/'; latency on domaine name resolution
+    //private $arduinoServer = 'http://192.168.70.105/'; // 'http://arduino.local/'; latency on domaine name resolution
 
     /**
      * @Route("/", name="home")
@@ -31,14 +31,14 @@ class DefaultController extends Controller
      */
     public function orderAction(Drink $drink)
     {
-        $arduino = $this->initArduino();
-
+        //$arduino = $this->initArduino();
         $this
             ->get('braincrafted_bootstrap.flash')
             ->success('=)');
         
-        $this->drinkToArduino($drink, $arduino);
-        
+        //$this->drinkToArduino($drink, $arduino);
+        $this->drinkToPythonscript($drink, $pythonscript);
+
         //Redirect
         return $this->redirect($this->generateUrl('home'));
     }
@@ -47,23 +47,52 @@ class DefaultController extends Controller
      * @Route("/startup")
      * @Template()
      */
-    public function startupAction()
-    {
-        $arduino = $this->initArduino();
-        $childs = array();
+    // public function startupAction()
+    // {
+    //     //$arduino = $this->initArduino();
+    //     $childs = array();
         
-        //getActivePumps
-        for ($i = 2; $i <= 11; $i++) {
-            $arduino->arduinoResquest($arduino->getArduinoServer(), $arduino->initInstruc($i));
-            $childs[] = $arduino->arduinoResquest(
-                            $arduino->getArduinoServer(), 
-                            $arduino->pumpDeactivate($i));
+    //     //getActivePumps
+    //     for ($i = 2; $i <= 11; $i++) {
+    //         $arduino->arduinoResquest($arduino->getArduinoServer(), $arduino->initInstruc($i));
+    //         $childs[] = $arduino->arduinoResquest(
+    //                     $arduino->getArduinoServer(), 
+    //                     $arduino->pumpDeactivate($i));
+    //     }
+        
+    //     usleep(10000000);
+    //     die('Fn startup');
+    //     return array();
+    // }
+
+
+//Pythonscript
+    
+    private function drinkToPythonscript(Drink $drink)
+    {
+        $BeverageDrinks = $drink->getBeverageDrinks();
+        
+        $portions = array();
+        foreach ($BeverageDrinks as $BeverageDrink) {
+            if($BeverageDrink->getBeverage()->getPump() != null) {
+                    $portions[] = new Portion(
+                        $BeverageDrink->getBeverage()->getPump()->getPin(),
+                        $this->portionToTime($BeverageDrink->getQty())
+                    );
+            }
+        }
+
+        $childs = array();
+        foreach ($portions as $key => $portion) {
+            //python shooter.py Pump milisec
+            //python shooter.py 1 1000
+            exec($this->get('kernel')->getRootDir() . '/../../shooter.py '.$portion->getPump().' '.$portion->getTime());
         }
         
-        usleep(10000000);
-        die('Fn startup');
-        return array();
     }
+
+
+//Arduino
 
     private function initArduino()
     {
@@ -73,12 +102,7 @@ class DefaultController extends Controller
     }
     
     private function getDrinks()
-    {
-//        return $this
-//                ->getDoctrine()
-//                ->getRepository('ShooterInterfaceBundle:Drink')
-//                ->findAll();
-        
+    {     
         return $this
             ->getDoctrine()
             ->getRepository('ShooterInterfaceBundle:Drink')
@@ -215,7 +239,17 @@ class Portion
         $this->pump_id = $pump_id;
         $this->time = $time;
     }
+
+    public function getPump()
+    {
+        return $this->pump_id;
+    }
     
+    public function getTime()
+    {
+        return $this->time;
+    }
+
     public function start()
     {
         $this->start = microtime(true);
